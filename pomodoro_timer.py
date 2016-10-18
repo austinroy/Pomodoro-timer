@@ -80,6 +80,7 @@ def long_rest (long_rest_time):
 
 #set alarm on or off
 def sound_config ():
+	sound = True
 	print("""Choose a sound setting
 		[0] - Off
 		[1] - On
@@ -94,11 +95,9 @@ def sound_config ():
 
 #starts a new task
 def new_task():
-	c.execute("CREATE TABLE IF NOT EXISTS Tasks(taskname TEXT, task_date TEXT, cycles REAL)")
+	c.execute("CREATE TABLE IF NOT EXISTS Tasks(taskname TEXT, taskdate TEXT, cycles REAL)")
 
-	print("""
-		Choose settings to use. For default press 1 or to make your own press any button
-		""")
+	choice = input ("Choose settings to use. For default press 1 or to make your own press any button :")
 
 	if choice == '1':
 		pomodoro_time = 25
@@ -106,45 +105,53 @@ def new_task():
 		long_rest_time = 15
 		sound = True
 	else:
-		set_task_time()
-		set_long_rest_time()
-		set_short_rest_time()
-		sound_config()
+		# set_task_time()
+		# set_long_rest_time()
+		# set_short_rest_time()
+		# sound_config()
+		pomodoro_time = int(set_task_time())
+		short_rest_time = int(set_short_rest_time())
+		long_rest_time = int(set_long_rest_time())
+		sound = int(sound_config())
 
 	unix = time.time()
-	date = str(datetime.datetime.fromstimestamp(unix).strftime('%Y - %m - %d'))
+	date = str(datetime.datetime.fromtimestamp(unix).strftime('%Y - %m - %d'))
 
 	task = {}
-	task_date = str(datetime.datetime.fromstimestamp(unix).strftime('%Y - %m - %d'))
+	task_date = str(datetime.datetime.fromtimestamp(unix).strftime('%Y - %m - %d'))
 	task_name = input ("Enter task name :")
 	task_cycles = 0
+	stop = False
 
-	while not stop_task:
+	while stop == False:
 		count = 3
 		while count >0:
 			task_cycles += 1
-			run_task()
-			short_rest
+			run_task(pomodoro_time)
+			short_rest(short_rest_time)
 			count -= 1
-		run_task)()
+			stop = True
+		run_task(pomodoro_time)
+		long_rest(long_rest_time)
 		task_cycles +=1
 
 	c.execute("INSERT INTO Tasks (taskname , taskdate, cycles ) VALUES (?,?,?)",
 		(task_name,task_date,task_cycles))
+	conn.commit()
 
 
 #returns a list of tasks on a certain day
 def list_tasks():
 	entered_date = input("Enter date to view :")
 	c.execute("""SELECT * FROM Tasks WHERE taskdate = ?;""", (entered_date,))
-    data = c.fetchall()
-    print(data)
-    for row in data:
-        print(row)
+	data = c.fetchall()
+	print(data)
+	for row in data:
+		print(row)
 
 #stops an ongoing tasks
 def stop_task():
-	pass
+	stop = True
 
 #main program which provides the menu the user first interacts with
 def main():
@@ -160,7 +167,7 @@ def main():
 
     """)
 
-    action = input('What would you want to do today? (Enter a number) ')
+    action = input("What would you want to do today? (Enter a number) ")
 
     if action == '1':
         set_task_time()
@@ -173,7 +180,7 @@ def main():
     elif action == '5':
     	c.close()
     	conn.close()
-        exit()
+    	exit()
     else:
         print('No valid choice was given, try again')
 
