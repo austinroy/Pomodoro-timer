@@ -94,6 +94,8 @@ def sound_config ():
 
 #starts a new task
 def new_task():
+	c.execute("CREATE TABLE IF NOT EXISTS Tasks(taskname TEXT, task_date TEXT, cycles REAL)")
+
 	print("""
 		Choose settings to use. For default press 1 or to make your own press any button
 		""")
@@ -117,13 +119,28 @@ def new_task():
 	task_name = input ("Enter task name :")
 	task_cycles = 0
 
+	while not stop_task:
+		count = 3
+		while count >0:
+			task_cycles += 1
+			run_task()
+			short_rest
+			count -= 1
+		run_task)()
+		task_cycles +=1
+
 	c.execute("INSERT INTO Tasks (taskname , taskdate, cycles ) VALUES (?,?,?)",
 		(task_name,task_date,task_cycles))
 
 
 #returns a list of tasks on a certain day
 def list_tasks():
-	pass
+	entered_date = input("Enter date to view :")
+	c.execute("""SELECT * FROM Tasks WHERE taskdate = ?;""", (entered_date,))
+    data = c.fetchall()
+    print(data)
+    for row in data:
+        print(row)
 
 #stops an ongoing tasks
 def stop_task():
