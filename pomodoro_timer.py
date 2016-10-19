@@ -2,6 +2,7 @@ import time
 import sys
 import datetime
 import sqlite3
+from pyfiglet import Figlet
 
 #creates database and cursor
 conn = sqlite3.connect('pomodoro.db')
@@ -94,8 +95,8 @@ def sound_config ():
 	return sound
 
 #starts a new task
-def new_task():
-	c.execute("CREATE TABLE IF NOT EXISTS Tasks(taskname TEXT, taskdate TEXT, cycles REAL)")
+def new_task(task_name):
+	c.execute("CREATE TABLE IF NOT EXISTS Tasks(taskname TEXT, taskdate TEXT, cycles REAL )")
 
 	choice = input ("Choose settings to use. For default press 1 or to make your own press any button :")
 
@@ -116,20 +117,21 @@ def new_task():
 	task = {}
 	task_date = str(datetime.datetime.fromtimestamp(unix).strftime('%Y - %m - %d'))
 	task_name = input ("Enter task name :")
-	task_cycles = 0
-	stop = False
+	task_length = int(input("Enter task duration :"))
+	task_cycles = task_length//pomodoro_time
+	x = 0
 
-	while stop == False:
+	while task_cycles > x:
 		count = 3
 		while count >0:
-			task_cycles += 1
+			x += 1
 			run_task(pomodoro_time)
 			short_rest(short_rest_time)
 			count -= 1
 			stop = True
 		run_task(pomodoro_time)
 		long_rest(long_rest_time)
-		task_cycles +=1
+		x +=1
 
 	c.execute("INSERT INTO Tasks (taskname , taskdate, cycles ) VALUES (?,?,?)",
 		(task_name,task_date,task_cycles))
@@ -137,7 +139,7 @@ def new_task():
 
 
 #returns a list of tasks on a certain day
-def list_tasks():
+def list_tasks(entered_date):
 	entered_date = input("Enter date to view (Formart is Y - m - d):")
 	c.execute("""SELECT * FROM Tasks WHERE taskdate = ?;""", (entered_date,))
 	data = c.fetchall()
@@ -145,8 +147,6 @@ def list_tasks():
 	for row in data:
 		print(row)
 
-	input("Press enter to return to home")
-	main()
 
 #stops an ongoing tasks
 def stop_task():
@@ -154,13 +154,16 @@ def stop_task():
 
 #main program which provides the menu the user first interacts with and choses next action
 def main():
+    f = Figlet(font = 'roman')
+    print (f.renderText("Pomo Timer"))
+
     print("""
     Pomodoro Task Timer
 		
     Choose an action to continue:
-    
-    start task - Start a new task
-    list tasks - List tasks done today
+
+    pomodoro start - Start a new task
+    pomodoro list - List tasks done today
     close - Exit
 
     """)
