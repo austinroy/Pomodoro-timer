@@ -105,10 +105,6 @@ def new_task():
 		long_rest_time = 15
 		sound = True
 	else:
-		# set_task_time()
-		# set_long_rest_time()
-		# set_short_rest_time()
-		# sound_config()
 		pomodoro_time = int(set_task_time())
 		short_rest_time = int(set_short_rest_time())
 		long_rest_time = int(set_long_rest_time())
@@ -142,48 +138,47 @@ def new_task():
 
 #returns a list of tasks on a certain day
 def list_tasks():
-	entered_date = input("Enter date to view :")
+	entered_date = input("Enter date to view (Formart is Y - m - d):")
 	c.execute("""SELECT * FROM Tasks WHERE taskdate = ?;""", (entered_date,))
 	data = c.fetchall()
-	print(data)
+	# print(data)
 	for row in data:
 		print(row)
+
+	input("Press enter to return to home")
+	main()
 
 #stops an ongoing tasks
 def stop_task():
 	stop = True
 
-#main program which provides the menu the user first interacts with
+#main program which provides the menu the user first interacts with and choses next action
 def main():
     print("""
     Pomodoro Task Timer
 		
-    Choose a number to continue:
-    [1]- Set Task Time
-    [2]- Set Rest Time
-    [3]- Start a new task
-    [4]- List tasks done today
-    [5]- Exit
+    Choose an action to continue:
+    
+    start task - Start a new task
+    list tasks - List tasks done today
+    close - Exit
 
     """)
 
-    action = input("What would you want to do today? (Enter a number) ")
+    action = input("What would you want to do today? ")
 
-    if action == '1':
-        set_task_time()
-    elif action == '2':
-        set_rest_time()
-    elif action == '3':
+    if action == 'pomodoro start':
         new_task()
-    elif action == '4':
+    elif action == 'pomodoro list':
         list_tasks()
-    elif action == '5':
+    elif action == 'close':
+    	print ("Closing Application ...")
     	c.close()
     	conn.close()
     	exit()
     else:
         print('No valid choice was given, try again')
-
+        main()
 
 if __name__ == '__main__':
-	main()
+	main().run(debug = True)
