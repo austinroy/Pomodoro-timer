@@ -64,6 +64,7 @@ def run_task (pomodoro_time):
 			print("Timer stopped!")
 			return 'stopped'
 	print("Take a break")
+	
 	# if sound == True:
 	# 	winsound.Beep(Freq,Dur)
 
