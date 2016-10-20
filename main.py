@@ -11,6 +11,7 @@ Usage:
     pomodoro_timer config_sound <off/on>
     pomodoro_timer list <date>
     pomodoro_timer list_all
+    pomodoro clear
     pomodoro_timer (-i | --interactive)
     pomodoro_timer (-h | --help | --version)
 
@@ -81,6 +82,7 @@ Usage:
     pomodoro config_sound <off/on>
     pomodoro list <date>
     pomodoro list_all
+    pomodoro clear
     pomodoro (-i | --interactive)
     pomodoro (-h | --help | --version)
 
@@ -99,6 +101,7 @@ Options:
         exit()
 
     def do_clear(self,arg):
+        """Usage: clear"""
         os.system('cls')
     
     @docopt_cmd
