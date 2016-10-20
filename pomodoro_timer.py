@@ -6,16 +6,18 @@ from pyfiglet import Figlet
 import os
 import winsound
 
-Freq = 2500 # Set Frequency To 2500 Hertz
-Dur = 1000 # Set Duration To 1000 ms == 1 second
+Freq = 2500 # Set beep Frequency To 2500 Hertz
+Dur = 1000 # Set beep Duration To 1000 ms == 1 second
 
 #creates database and cursor
 conn = sqlite3.connect('pomodoro.db')
 c = conn.cursor()
-
+stop = False
 #links to alarm sound file
-alarm = 'aplayAlarm-tone.wav'
+# alarm = 'aplayAlarm-tone.wav'
 
+def stop():
+	stop = True
 #set working intervals
 def set_task_time():
 	pomodoro_time = input("Enter task interval time :")
@@ -29,12 +31,13 @@ def set_short_rest_time():
 #set long rest intervals
 def set_long_rest_time():
 	long_rest_time = input("Enter long break time :")
+	# if type(long_rest_time) != int:
+	# 	print("please enter")
 	return long_rest_time
 
 #counts down working time
 def run_task (pomodoro_time):
 	minute = 60
-	sound_config = 'on'
 	for remainingtime in range (pomodoro_time*minute,0,-1):
 		sys.stdout.write("\r")
 		minute -=1
@@ -46,12 +49,13 @@ def run_task (pomodoro_time):
 		else:
 			sys.stdout.write("[{:2} :{:1d}] remaining ".format(pomodoro_time-1, minute))
 		sys.stdout.flush()
-		time.sleep(1)
-	sys.stdout.write("Take a break 	\n")
-	if sound:
+		try:
+			time.sleep(1)
+		except KeyboardInterrupt:
+			return 'stopped'
+	print("Take a break")
+	if sound == True:
 		winsound.Beep(Freq,Dur)
-		# if sound_config == 'on':)
-	# 	playASound(alarm)
 
 
 #counts down short rest time
@@ -71,7 +75,7 @@ def short_rest (short_rest_time):
 		sys.stdout.flush()
 		time.sleep(1)
 	sys.stdout.write("Back to work 	\n")
-	if sound:
+	if sound == True:
 		winsound.Beep(Freq,Dur)
 
 #count down long rest time
@@ -91,27 +95,31 @@ def long_rest (long_rest_time):
 		sys.stdout.flush()
 		time.sleep(1)
 	sys.stdout.write("Back to work 	\n")
-	if sound:
+	if sound == True:
 		winsound.Beep(Freq,Dur)
 
 #set alarm on or off
 def sound_config ():
 	sound = True
-	print("""Choose a sound setting
-		Off
-		On
+	print("""Choose a sound setting(case sensitive)
+		off
+		on
 
 		""")
 	choice = input("Enter sound setting :")
 	if choice == 'off':
 		sound = False
+		return sound
 	if choice == 'on':
 		sound = True
+		return sound
+	else:
+		print("Invalid choice please use on/off")
 	return sound
 
 #starts a new task
 def new_task(task_name):
-	c.execute("CREATE TABLE IF NOT EXISTS Tasks(taskname TEXT, taskdate TEXT, intervals INT, cycles REAL )")
+	c.execute("CREATE TABLE IF NOT EXISTS Tasks(taskname TEXT, taskdate TEXT, intervals INT, cycles REAL,rating INT )")
 
 	choice = input ("Choose settings to use. For default press 1 or to make your own press any button :")
 
@@ -124,11 +132,9 @@ def new_task(task_name):
 		pomodoro_time = int(set_task_time())
 		short_rest_time = int(set_short_rest_time())
 		long_rest_time = int(set_long_rest_time())
-		sound = int(sound_config())
+		sound = sound_config()
 
 	unix = time.time()
-	date = str(datetime.datetime.fromtimestamp(unix).strftime('%Y-%m -%d'))
-
 	task = {}
 	task_date = str(datetime.datetime.fromtimestamp(unix).strftime('%d:%m:%Y'))
 	task_name = task_name
@@ -138,40 +144,56 @@ def new_task(task_name):
 	else:
 		task_cycles = task_length//pomodoro_time
 		
-
+	print("Counter started, press ctrl + c to stop")
 	x = 0
 
 	while task_cycles > x:
 		count = 3
 		while count >0 and task_cycles > x:
 			x += 1
-			run_task(pomodoro_time)
+			status = run_task(pomodoro_time)
+			if status == 'stopped':
+				break_status = 'stopped'
+				break
 			short_rest(short_rest_time)
 			count -= 1
+		if break_status == 'stopped':
+			break
 		run_task(pomodoro_time)
 		long_rest(long_rest_time)
 		x +=1
 
 	print("Time is up!!!")
-	rating = input("Rate your timing from 1 to 5")
+	rating = input("On a scale of 1 to 5 how would you rate your experience using this timer?")
 
-	c.execute("INSERT INTO Tasks (taskname , taskdate, cycles , intervals ) VALUES (?,?,?,?)",
-		(task_name,task_date,task_cycles,pomodoro_time))
+	c.execute("INSERT INTO Tasks (taskname , taskdate, cycles , intervals , rating) VALUES (?,?,?,?,?)",
+		(task_name,task_date,task_cycles,pomodoro_time,rating))
 	conn.commit()
+
+def delete_all():
+	confirm = input("Are you sure you want to delete all tasks? Action cannot be reversed y/n ")
+	if confirm == 'y':
+		c.execute("""DELETE from Tasks""")
+		conn.commit()
+		print("Files deleted...")
+	elif confirm == 'n':
+		print("Deletion cancelled")
+	else:
+		print("Invalid choice press y for yes or n for no")
 
 
 #returns a list of tasks on a certain day
 def list_tasks(entered_date):
-	#entered_date = input("Enter date to view (Formart is Y-m-d):")
+	#entered_date = input("Enter date to view (Formart is Y:m:d):")
 	c.execute("""SELECT * FROM Tasks WHERE taskdate = ?;""", (entered_date,))
 	data = c.fetchall()
 	print("""
-	==================================================================================
-	Task name 	| Task Date 	| Cycles taken 	| Working Interval(minutes) 
-	=================================================================================="""
+	===========================================================================================
+	Task name 	| Task Date 	| Cycles taken 	| Working Interval(minutes) 	| Rating
+	==========================================================================================="""
 	)
 	for row in data:
-		print("""	"""+str(row[0])+"		| "+str(row[1])+"	| "+str(row[2])+"		| "+str(row[3]))
+		print("""	"""+str(row[0])+"		| "+str(row[1])+"	| "+str(row[2])+"		| "+str(row[3])+"				| "+str(row[4]))
 
 #lists all tasks ever done		
 def list_all_tasks():
@@ -179,12 +201,12 @@ def list_all_tasks():
 	c.execute("""SELECT * FROM Tasks""",)
 	data = c.fetchall()
 	print("""
-	==================================================================================
-	Task name 	| Task Date 	| Cycles taken 	| Working Interval(minutes) 
-	=================================================================================="""
+	=============================================================================================
+	Task name 	| Task Date 	| Cycles taken 	| Working Interval(minutes) 	| Rating
+	============================================================================================="""
 	)
 	for row in data:
-		print("""	"""+str(row[0])+"		| "+str(row[1])+"	| "+str(row[2])+"		| "+str(row[3]))
+		print("""	"""+str(row[0])+"		| "+str(row[1])+"	| "+str(row[2])+"		| "+str(row[3])+"				| "+str(row[4]))
 
 
 #stops an ongoing tasks

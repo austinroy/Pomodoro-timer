@@ -1,0 +1,5 @@
+Requires:
+termcolor
+docopt
+sqlite3
+pyfiglet

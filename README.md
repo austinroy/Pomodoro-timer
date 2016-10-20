@@ -43,7 +43,7 @@ The pomodoro Timer application has the following commands:
     10. pomodoro list <dd:mm:YYYY> This command Lists all task with the start time equal to the given parameter  
     `list 20-08-2016` lists all the tasks with the completion date as 20th October 2016  
 
-    11. pomodoro clear <dd:mm:YYYY> Deletes all the tasks done on a particular day
+    11. pomodoro delete <dd:mm:YYYY> Deletes all the tasks done on a particular day
     `clear 20:10:2016` deletes all tasks done on 20th October 2016
 
 __To do List__

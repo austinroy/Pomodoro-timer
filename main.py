@@ -29,7 +29,7 @@ from docopt import docopt, DocoptExit
 import datetime
 import sqlite3
 import time
-from pyfiglet import Figlet
+from pyfiglet import Figlet,figlet_format
 
 #creates database and cursor
 conn = sqlite3.connect('pomodoro.db')
@@ -69,7 +69,8 @@ def docopt_cmd(func):
 
 class MyInteractive (cmd.Cmd):
     f = Figlet(font = 'block')
-    intro = cprint((f.renderText("My Pomo Timer")) + 'Welcome to pomodoro timer!' \
+    print(cprint(figlet_format("My Pomo Timer", font = 'block'),'blue','on_grey'))
+    intro = 'Welcome to pomodoro timer!' \
         + ' (type help for a list of commands.)'+ """
 This example uses docopt with the built in cmd module to demonstrate an
 interactive command application.
@@ -90,7 +91,7 @@ Options:
     -i, --interactive  Interactive Mode
     -h, --help  Show this screen and exit.
     --baud=<n>  Baudrate [default: 9600]
-""","blue")
+"""
     prompt = 'pomodoro '
     file = None
 
@@ -119,6 +120,10 @@ Options:
         """Usage: list_all"""
         list_all_tasks()
 
+    @docopt_cmd
+    def do_delete_all(self, arg):
+        """Usage: list_all"""
+        delete_all()
 
     @docopt_cmd
     def do_set_short_break(self, arg):
