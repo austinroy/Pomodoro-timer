@@ -16,19 +16,24 @@ stop = False
 #links to alarm sound file
 # alarm = 'aplayAlarm-tone.wav'
 
-def stop():
-	stop = True
+
 #set working intervals
 def set_task_time():
 	pomodoro_time = input("Enter task interval time :")
-	# if type(pomodoro_time) != int:
-	# 	print("Enter ")
-	return pomodoro_time
+	if type pomodoro_time != int:
+		print("please enter an integer")
+		set_task_time()
+	else:
+		return pomodoro_time
 
 #set short rest intervals
 def set_short_rest_time():
 	short_rest_time = input("Enter short break time :")
-	return short_rest_time
+	if type pomodoro_time != int:
+		print("please enter an integer")
+		set_short_rest_time()
+	else:
+		return short_rest_time
 
 #set long rest intervals
 def set_long_rest_time():
@@ -56,6 +61,7 @@ def run_task (pomodoro_time):
 		try:
 			time.sleep(1)
 		except KeyboardInterrupt:
+			print("Timer stopped!")
 			return 'stopped'
 	print("Take a break")
 	# if sound == True:
@@ -110,7 +116,7 @@ def sound_config ():
 		on
 
 		""")
-	choice = input("Enter sound setting :")
+	choice = str(input("Enter sound setting :"))
 	if choice == 'off':
 		sound = False
 		return sound
@@ -125,7 +131,7 @@ def sound_config ():
 def new_task(task_name):
 	c.execute("CREATE TABLE IF NOT EXISTS Tasks(taskname TEXT, taskdate TEXT, intervals INT, cycles REAL,rating INT )")
 
-	choice = input ("Choose settings to use. For default press 1 or to make your own press any button :")
+	choice = str(input ("Choose settings to use. For default press 1 or to make your own press any button :"))
 
 	if choice == '1':
 		pomodoro_time = 25
@@ -168,7 +174,7 @@ def new_task(task_name):
 		x +=1
 
 	print("Time is up!!!")
-	rating = input("On a scale of 1 to 5 how would you rate your experience using this timer?")
+	rating = int(input("On a scale of 1 to 5 how would you rate your experience using this timer?"))
 
 	c.execute("INSERT INTO Tasks (taskname , taskdate, cycles , intervals , rating) VALUES (?,?,?,?,?)",
 		(task_name,task_date,task_cycles,pomodoro_time,rating))

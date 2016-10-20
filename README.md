@@ -50,6 +50,6 @@ __To do List__
   *Implement command 7 -will require deeper understanding of multithreading
   *Implement command 8 -will require deeper understanding of multithreading
   *Implement command 11
-  *add bell
+  *Implement multiplatform alarm that works on OS other than windows
 
 
