@@ -165,10 +165,14 @@ def new_task(task_name):
 			if status == 'stopped':
 				break_status = 'stopped'
 				break
+			else:
+				pass
 			short_rest(short_rest_time)
 			count -= 1
 		if break_status == 'stopped':
 			break
+		else:
+			pass
 		run_task(pomodoro_time)
 		long_rest(long_rest_time)
 		x +=1
