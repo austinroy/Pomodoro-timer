@@ -4,7 +4,7 @@ import datetime
 import sqlite3
 from pyfiglet import Figlet
 import os
-import winsound
+# import winsound
 
 Freq = 2500 # Set beep Frequency To 2500 Hertz
 Dur = 1000 # Set beep Duration To 1000 ms == 1 second
@@ -21,6 +21,8 @@ def stop():
 #set working intervals
 def set_task_time():
 	pomodoro_time = input("Enter task interval time :")
+	# if type(pomodoro_time) != int:
+	# 	print("Enter ")
 	return pomodoro_time
 
 #set short rest intervals
@@ -31,9 +33,11 @@ def set_short_rest_time():
 #set long rest intervals
 def set_long_rest_time():
 	long_rest_time = input("Enter long break time :")
-	# if type(long_rest_time) != int:
-	# 	print("please enter")
-	return long_rest_time
+	if type(long_rest_time) != int:
+		print("please enter an integer")
+		set_long_rest_time()
+	else:
+		return long_rest_time
 
 #counts down working time
 def run_task (pomodoro_time):
@@ -54,8 +58,8 @@ def run_task (pomodoro_time):
 		except KeyboardInterrupt:
 			return 'stopped'
 	print("Take a break")
-	if sound == True:
-		winsound.Beep(Freq,Dur)
+	# if sound == True:
+	# 	winsound.Beep(Freq,Dur)
 
 
 #counts down short rest time
@@ -75,8 +79,8 @@ def short_rest (short_rest_time):
 		sys.stdout.flush()
 		time.sleep(1)
 	sys.stdout.write("Back to work 	\n")
-	if sound == True:
-		winsound.Beep(Freq,Dur)
+	# if sound == True:
+	# 	winsound.Beep(Freq,Dur)
 
 #count down long rest time
 def long_rest (long_rest_time):
@@ -95,8 +99,8 @@ def long_rest (long_rest_time):
 		sys.stdout.flush()
 		time.sleep(1)
 	sys.stdout.write("Back to work 	\n")
-	if sound == True:
-		winsound.Beep(Freq,Dur)
+	# if sound == True:
+	# 	winsound.Beep(Freq,Dur)
 
 #set alarm on or off
 def sound_config ():
