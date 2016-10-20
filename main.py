@@ -6,9 +6,6 @@ interactive command application.
 Usage:
     pomodoro_timer start <task-title>
     pomodoro_timer time <duration-in-minutes>
-    pomodoro_timer config_short_break <duration-in-minutes>
-    pomodoro_timer config_long_break <duration-in-minutes>
-    pomodoro_timer config_sound <off/on>
     pomodoro_timer list <date>
     pomodoro_timer list_all
     pomodoro clear
@@ -78,12 +75,8 @@ interactive command application.
 Usage:
     pomodoro start <task-title>
     pomodoro time <duration-in-minutes>
-    pomodoro config_short_break <duration-in-minutes>
-    pomodoro config_long_break <duration-in-minutes>
-    pomodoro config_sound <off/on>
     pomodoro list <date>
     pomodoro list_all
-    pomodoro clear
     pomodoro (-i | --interactive)
     pomodoro (-h | --help | --version)
 
@@ -101,9 +94,6 @@ Options:
         print('Good Bye!')
         exit()
 
-    def do_clear(self,arg):
-        """Usage: clear"""
-        os.system('cls')
     
     @docopt_cmd
     def do_start(self, arg):
@@ -122,7 +112,7 @@ Options:
 
     @docopt_cmd
     def do_delete_all(self, arg):
-        """Usage: list_all"""
+        """Usage: delete_all"""
         delete_all()
 
     @docopt_cmd
@@ -130,21 +120,6 @@ Options:
         """Usage: config short_break <duration-in-minutes>"""
         set_short_rest_time(arg['<duration-in-minutes>'])
 
-    @docopt_cmd
-    def do_set_long_break(self, arg):
-        """Usage: long_break <duration-in-minutes>"""
-        set_long_rest_time(arg['<duration-in-minutes>'])
-
-
-    @docopt_cmd
-    def do_set_time(self, arg):
-        """Usage : config_time <duration-in-minutes>"""
-        set_task_time(arg['<duration-in-minutes>'])
-
-    @docopt_cmd
-    def do_set_time(self, arg):
-        """Usage: config_sound <duration-in-minutes>"""
-        set_task_time(arg['<duration-in-minutes>'])
 
     @docopt_cmd
     def do_stop_counter(self,arg):
