@@ -4,7 +4,10 @@ import datetime
 import sqlite3
 from pyfiglet import Figlet
 import os
+import winsound
 
+Freq = 2500 # Set Frequency To 2500 Hertz
+Dur = 1000 # Set Duration To 1000 ms == 1 second
 
 #creates database and cursor
 conn = sqlite3.connect('pomodoro.db')
@@ -45,7 +48,9 @@ def run_task (pomodoro_time):
 		sys.stdout.flush()
 		time.sleep(1)
 	sys.stdout.write("Take a break 	\n")
-	# if sound_config == 'on':
+	if sound:
+		winsound.Beep(Freq,Dur)
+		# if sound_config == 'on':)
 	# 	playASound(alarm)
 
 
@@ -66,6 +71,8 @@ def short_rest (short_rest_time):
 		sys.stdout.flush()
 		time.sleep(1)
 	sys.stdout.write("Back to work 	\n")
+	if sound:
+		winsound.Beep(Freq,Dur)
 
 #count down long rest time
 def long_rest (long_rest_time):
@@ -84,6 +91,8 @@ def long_rest (long_rest_time):
 		sys.stdout.flush()
 		time.sleep(1)
 	sys.stdout.write("Back to work 	\n")
+	if sound:
+		winsound.Beep(Freq,Dur)
 
 #set alarm on or off
 def sound_config ():
@@ -183,35 +192,35 @@ def stop_task():
 	stop = True
 
 #main program which provides the menu the user first interacts with and choses next action
-def main():
-    f = Figlet(font = 'roman')
-    print (f.renderText("Pomo Timer"))
+# def main():
+#     f = Figlet(font = 'roman')
+#     print (f.renderText("Pomo Timer"))
 
-    print("""
-    Pomodoro Task Timer
+#     print("""
+#     Pomodoro Task Timer
 		
-    Choose an action to continue:
+#     Choose an action to continue:
 
-    pomodoro start - Start a new task
-    pomodoro list - List tasks done today
-    close - Exit
+#     pomodoro start - Start a new task
+#     pomodoro list - List tasks done today
+#     close - Exit
 
-    """)
+#     """)
 
-    action = input("What would you want to do today? ")
+#     action = input("What would you want to do today? ")
 
-    if action == 'pomodoro start':
-        new_task()
-    elif action == 'pomodoro list':
-        list_tasks()
-    elif action == 'close':
-    	print ("Closing Application ...")
-    	c.close()
-    	conn.close()
-    	exit()
-    else:
-        print('No valid choice was given, try again')
-        main()
+#     if action == 'pomodoro start':
+#         new_task()
+#     elif action == 'pomodoro list':
+#         list_tasks()
+#     elif action == 'close':
+#     	print ("Closing Application ...")
+#     	c.close()
+#     	conn.close()
+#     	exit()
+#     else:
+#         print('No valid choice was given, try again')
+#         main()
 
-if __name__ == '__main__':
-	main()
+# if __name__ == '__main__':
+# 	main()

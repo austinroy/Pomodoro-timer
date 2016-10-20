@@ -20,7 +20,9 @@ Options:
     --baud=<n>  Baudrate [default: 9600]
 """
 from pomodoro_timer import *
+from termcolor import cprint
 import sys
+import os
 import cmd
 from docopt import docopt, DocoptExit
 import datetime
@@ -66,8 +68,27 @@ def docopt_cmd(func):
 
 class MyInteractive (cmd.Cmd):
     f = Figlet(font = 'block')
-    intro = (f.renderText("My Pomo Timer")) + 'Welcome to pomodoro timer!' \
-        + ' (type help for a list of commands.)'
+    intro = cprint((f.renderText("My Pomo Timer")) + 'Welcome to pomodoro timer!' \
+        + ' (type help for a list of commands.)'+ """
+This example uses docopt with the built in cmd module to demonstrate an
+interactive command application.
+
+Usage:
+    pomodoro start <task-title>
+    pomodoro time <duration-in-minutes>
+    pomodoro config_short_break <duration-in-minutes>
+    pomodoro config_long_break <duration-in-minutes>
+    pomodoro config_sound <off/on>
+    pomodoro list <date>
+    pomodoro list_all
+    pomodoro (-i | --interactive)
+    pomodoro (-h | --help | --version)
+
+Options:
+    -i, --interactive  Interactive Mode
+    -h, --help  Show this screen and exit.
+    --baud=<n>  Baudrate [default: 9600]
+""","blue")
     prompt = 'pomodoro '
     file = None
 
@@ -77,7 +98,8 @@ class MyInteractive (cmd.Cmd):
         print('Good Bye!')
         exit()
 
-
+    def do_clear(self,arg):
+        os.system('cls')
     
     @docopt_cmd
     def do_start(self, arg):
@@ -86,13 +108,12 @@ class MyInteractive (cmd.Cmd):
 
     @docopt_cmd
     def do_list(self, arg):
-        """Usage: pomodoro list <date>"""
+        """Usage: list <date>"""
         list_tasks(arg['<date>'])
 
     @docopt_cmd
     def do_list_all(self, arg):
         """Usage: list_all"""
-        print("lists")
         list_all_tasks()
 
 
@@ -119,7 +140,7 @@ class MyInteractive (cmd.Cmd):
 
     @docopt_cmd
     def do_stop_counter(self,arg):
-        """Usage: pomodoro stop"""
+        """Usage: stop"""
         stop_task()
 
 
