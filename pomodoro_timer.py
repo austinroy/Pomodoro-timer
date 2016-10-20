@@ -61,6 +61,7 @@ def run_task (pomodoro_time):
 		sys.stdout.flush()
 		try:
 			time.sleep(1)
+			break_status = 'not broken'
 		except KeyboardInterrupt:
 			return 'stopped'
 	print("Take a break")
@@ -125,6 +126,7 @@ def sound_config ():
 		return sound
 	else:
 		print("Invalid choice please use on/off")
+		sound_config()
 	return sound
 
 #starts a new task
@@ -157,6 +159,7 @@ def new_task(task_name):
 	print("Counter started, press ctrl + c to stop")
 	x = 0
 
+	break_status=''
 	while task_cycles > x:
 		count = 3
 		while count >0 and task_cycles > x:
