@@ -4,18 +4,18 @@ This example uses docopt with the built in cmd module to demonstrate an
 interactive command application.
 
 Usage:
-    pomodoro_timer start <task-title>
-    pomodoro_timer time <duration-in-minutes>
-    pomodoro_timer list <date>
-    pomodoro_timer list_all
+    pomodoro start <task-title>
+    pomodoros time <duration-in-minutes>
+    pomodoro list <date>
+    pomodoro list_all
     pomodoro clear
-    pomodoro_timer (-i | --interactive)
-    pomodoro_timer (-h | --help | --version)
+    pomodoro (-i | --interactive)
+    pomodoro (-h | --help | --version)
+    pomodoro quit 
 
 Options:
     -i, --interactive  Interactive Mode
     -h, --help  Show this screen and exit.
-    --baud=<n>  Baudrate [default: 9600]
 """
 from pomodoro_timer import *
 from termcolor import cprint
