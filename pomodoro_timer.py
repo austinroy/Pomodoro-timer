@@ -144,7 +144,6 @@ def new_task(task_name):
 		pomodoro_time = int(set_task_time())
 		short_rest_time = int(set_short_rest_time())
 		long_rest_time = int(set_long_rest_time())
-		sound = sound_config()
 
 	unix = time.time()
 	task = {}
