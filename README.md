@@ -49,6 +49,6 @@ The pomodoro Timer application has the following commands:
 __To do List__
   *Implement command 7 -will require deeper understanding of multithreading
   *Implement command 8 -will require deeper understanding of multithreading
-  *Add sound compatibility for windows
+  *Add multiplatform sound compatibility 
 
 
