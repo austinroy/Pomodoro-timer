@@ -20,7 +20,7 @@ def stop():
 	stop = True
 #set working intervals
 def set_task_time():
-	pomodoro_time = input("Enter task interval time :")
+	pomodoro_time = int(input("Enter task interval time :"))
 	if type(pomodoro_time) != int:
 		print("please enter an integer")
 		set_task_time()
@@ -29,7 +29,7 @@ def set_task_time():
 
 #set short rest intervals
 def set_short_rest_time():
-	short_rest_time = input("Enter short break time :")
+	short_rest_time = int(input("Enter short break time :"))
 	if type(short_rest_time) != int:
 		print("please enter an integer")
 		set_short_rest_time()
@@ -38,7 +38,7 @@ def set_short_rest_time():
 
 #set long rest intervals
 def set_long_rest_time():
-	long_rest_time = input("Enter long break time :")
+	long_rest_time = int(input("Enter long break time :"))
 	if type(long_rest_time) != int:
 		print("please enter an integer")
 		set_long_rest_time()
