@@ -69,7 +69,7 @@ def docopt_cmd(func):
 
 class MyInteractive (cmd.Cmd):
     f = Figlet(font = 'block')
-    print(cprint(figlet_format("My Pomo Timer", font = 'block'),'blue','on_grey'))
+    print(cprint(figlet_format("My Pomo Timer", font = 'block'),'green','on_grey'))
     intro = 'Welcome to pomodoro timer!' \
         + ' (type help for a list of commands.)'+ """
 This example uses docopt with the built in cmd module to demonstrate an
