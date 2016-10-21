@@ -2,7 +2,8 @@ import time
 import sys
 import datetime
 import sqlite3
-from pyfiglet import Figlet
+from termcolor import colored
+from pyfiglet import Figlet,figlet_format
 import os
 # import winsound
 
@@ -16,22 +17,21 @@ stop = False
 #links to alarm sound file
 # alarm = 'aplayAlarm-tone.wav'
 
-def stop():
-	stop = True
+
 #set working intervals
 def set_task_time():
 	pomodoro_time = int(input("Enter task interval time :"))
 	if type(pomodoro_time) != int:
-		print("please enter an integer")
+		print (colored ("please enter an integer",'green'))
 		set_task_time()
 	else:
 		return pomodoro_time
 
 #set short rest intervals
 def set_short_rest_time():
-	short_rest_time = int(input("Enter short break time :"))
+	short_rest_time = int (input("Enter short break time :"))
 	if type(short_rest_time) != int:
-		print("please enter an integer")
+		print(colored("please enter an integer", 'green'))
 		set_short_rest_time()
 	else:
 		return short_rest_time
@@ -40,7 +40,7 @@ def set_short_rest_time():
 def set_long_rest_time():
 	long_rest_time = int(input("Enter long break time :"))
 	if type(long_rest_time) != int:
-		print("please enter an integer")
+		print(colored("please enter an integer", 'green'))
 		set_long_rest_time()
 	else:
 		return long_rest_time
@@ -55,9 +55,9 @@ def run_task (pomodoro_time):
 			pomodoro_time -=1
 			minute =60
 		elif minute <=9:
-			sys.stdout.write("[{:2} :0{:1d}] remaining ".format(pomodoro_time-1, minute))
+			colored(sys.stdout.write("[{:2} :0{:1d}] remaining ".format(pomodoro_time-1, minute)),'green')
 		else:
-			sys.stdout.write("[{:2} :{:1d}] remaining ".format(pomodoro_time-1, minute))
+			colored (sys.stdout.write("[{:2} :{:1d}] remaining ".format(pomodoro_time-1, minute)), 'green')
 		sys.stdout.flush()
 		try:
 			time.sleep(1)
@@ -133,17 +133,20 @@ def sound_config ():
 def new_task(task_name):
 	c.execute("CREATE TABLE IF NOT EXISTS Tasks(taskname TEXT, taskdate TEXT, intervals INT, cycles REAL,rating INT )")
 
-	choice = input ("Choose settings to use. For default press 1 or to make your own press any button :")
+	choice = input ("Choose settings to use. For default press 1 or 2 to make your own press any button :")
 
 	if choice == '1':
 		pomodoro_time = 25
 		short_rest_time = 5
 		long_rest_time = 15
 		sound = True
-	else:
+	elif choice == '2':
 		pomodoro_time = int(set_task_time())
 		short_rest_time = int(set_short_rest_time())
 		long_rest_time = int(set_long_rest_time())
+	else:
+		print ("Please choose 1 0r 2")
+		new_task()
 
 	unix = time.time()
 	task = {}
@@ -171,6 +174,7 @@ def new_task(task_name):
 				pass
 			short_rest(short_rest_time)
 			count -= 1
+			x += 1
 		if break_status == 'stopped':
 			break
 		else:
@@ -180,7 +184,12 @@ def new_task(task_name):
 		x +=1
 
 	print("Time is up!!!")
-	rating = input("On a scale of 1 to 5 how would you rate your experience using this timer?")
+	rating = int (input("On a scale of 1 to 5 how would you rate your experience using this timer?"))
+	if rating > 0 and  rating < 5:
+		pass
+	else:
+		rating = 5
+		print("You did not enter a number between 1 and 5. Rating set to 5 by default :)")
 
 	c.execute("INSERT INTO Tasks (taskname , taskdate, cycles , intervals , rating) VALUES (?,?,?,?,?)",
 		(task_name,task_date,task_cycles,pomodoro_time,rating))
@@ -226,8 +235,8 @@ def list_all_tasks():
 
 
 #stops an ongoing tasks
-def stop_task():
-	stop = True
+# def stop_task():
+# 	stop = True
 
 #main program which provides the menu the user first interacts with and choses next action
 # def main():

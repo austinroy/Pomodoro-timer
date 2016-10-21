@@ -74,9 +74,9 @@ interactive command application.
 
 Usage:
     pomodoro start <task-title>
-    pomodoro time <duration-in-minutes>
     pomodoro list <date>
     pomodoro list_all
+    pomodoro delete_all
     pomodoro (-i | --interactive)
     pomodoro (-h | --help | --version)
 
@@ -114,12 +114,6 @@ Options:
     def do_delete_all(self, arg):
         """Usage: delete_all"""
         delete_all()
-
-    @docopt_cmd
-    def do_set_short_break(self, arg):
-        """Usage: config short_break <duration-in-minutes>"""
-        set_short_rest_time(arg['<duration-in-minutes>'])
-
 
     @docopt_cmd
     def do_stop_counter(self,arg):
